@@ -1,0 +1,470 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		38598D23A58722BF6F5D03B7 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F6D2CAEBDBA650B6A4CA5B8 /* libPods.a */; };
+		44102F481CD4A48D003920E4 /* MyAVPlayerItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 44102F471CD4A48D003920E4 /* MyAVPlayerItem.m */; };
+		44102F4D1CD4F9D1003920E4 /* ZLPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 44102F4C1CD4F9D1003920E4 /* ZLPlayerView.m */; };
+		4444586F1CD2FE6A00612FED /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4444586E1CD2FE6A00612FED /* main.m */; };
+		444458721CD2FE6A00612FED /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 444458711CD2FE6A00612FED /* AppDelegate.m */; };
+		444458751CD2FE6A00612FED /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 444458741CD2FE6A00612FED /* ViewController.m */; };
+		444458781CD2FE6A00612FED /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 444458761CD2FE6A00612FED /* Main.storyboard */; };
+		4444587A1CD2FE6A00612FED /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 444458791CD2FE6A00612FED /* Assets.xcassets */; };
+		4444587D1CD2FE6A00612FED /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4444587B1CD2FE6A00612FED /* LaunchScreen.storyboard */; };
+		444458861CD2FE8D00612FED /* ZLPlayerVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 444458851CD2FE8D00612FED /* ZLPlayerVC.m */; };
+		4444588B1CD3090000612FED /* libReveal.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 444458871CD308AD00612FED /* libReveal.dylib */; };
+		4444588C1CD3090000612FED /* Reveal.framework in Resources */ = {isa = PBXBuildFile; fileRef = 444458881CD308AD00612FED /* Reveal.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		35BD51E47DAC30767896F870 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		44102F461CD4A48D003920E4 /* MyAVPlayerItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyAVPlayerItem.h; sourceTree = "<group>"; };
+		44102F471CD4A48D003920E4 /* MyAVPlayerItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyAVPlayerItem.m; sourceTree = "<group>"; };
+		44102F4A1CD4A682003920E4 /* 2.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 2.mp4; sourceTree = "<group>"; };
+		44102F4B1CD4F9D1003920E4 /* ZLPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZLPlayerView.h; sourceTree = "<group>"; };
+		44102F4C1CD4F9D1003920E4 /* ZLPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZLPlayerView.m; sourceTree = "<group>"; };
+		4444586A1CD2FE6A00612FED /* ZLPlayerDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZLPlayerDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4444586E1CD2FE6A00612FED /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		444458701CD2FE6A00612FED /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		444458711CD2FE6A00612FED /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		444458731CD2FE6A00612FED /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		444458741CD2FE6A00612FED /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		444458771CD2FE6A00612FED /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		444458791CD2FE6A00612FED /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		4444587C1CD2FE6A00612FED /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		4444587E1CD2FE6A00612FED /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		444458841CD2FE8D00612FED /* ZLPlayerVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZLPlayerVC.h; sourceTree = "<group>"; };
+		444458851CD2FE8D00612FED /* ZLPlayerVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZLPlayerVC.m; sourceTree = "<group>"; };
+		444458871CD308AD00612FED /* libReveal.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libReveal.dylib; sourceTree = "<group>"; };
+		444458881CD308AD00612FED /* Reveal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Reveal.framework; sourceTree = "<group>"; };
+		4444588D1CD312A400612FED /* Common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Common.h; sourceTree = "<group>"; };
+		9F6D2CAEBDBA650B6A4CA5B8 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		A567C2A141EDD97712B29964 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		444458671CD2FE6A00612FED /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				38598D23A58722BF6F5D03B7 /* libPods.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		44102F491CD4A67B003920E4 /* source */ = {
+			isa = PBXGroup;
+			children = (
+				44102F4A1CD4A682003920E4 /* 2.mp4 */,
+			);
+			name = source;
+			sourceTree = "<group>";
+		};
+		444458611CD2FE6A00612FED = {
+			isa = PBXGroup;
+			children = (
+				44102F491CD4A67B003920E4 /* source */,
+				444458871CD308AD00612FED /* libReveal.dylib */,
+				444458881CD308AD00612FED /* Reveal.framework */,
+				4444586C1CD2FE6A00612FED /* ZLPlayerDemo */,
+				4444586B1CD2FE6A00612FED /* Products */,
+				A6D54F3AF2CF807BAC86D96E /* Pods */,
+				C3414DCE21813AD9329ED712 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		4444586B1CD2FE6A00612FED /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4444586A1CD2FE6A00612FED /* ZLPlayerDemo.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4444586C1CD2FE6A00612FED /* ZLPlayerDemo */ = {
+			isa = PBXGroup;
+			children = (
+				44102F461CD4A48D003920E4 /* MyAVPlayerItem.h */,
+				44102F471CD4A48D003920E4 /* MyAVPlayerItem.m */,
+				444458701CD2FE6A00612FED /* AppDelegate.h */,
+				444458711CD2FE6A00612FED /* AppDelegate.m */,
+				444458731CD2FE6A00612FED /* ViewController.h */,
+				444458741CD2FE6A00612FED /* ViewController.m */,
+				444458841CD2FE8D00612FED /* ZLPlayerVC.h */,
+				444458851CD2FE8D00612FED /* ZLPlayerVC.m */,
+				444458761CD2FE6A00612FED /* Main.storyboard */,
+				444458791CD2FE6A00612FED /* Assets.xcassets */,
+				4444587B1CD2FE6A00612FED /* LaunchScreen.storyboard */,
+				4444587E1CD2FE6A00612FED /* Info.plist */,
+				4444586D1CD2FE6A00612FED /* Supporting Files */,
+				4444588D1CD312A400612FED /* Common.h */,
+				44102F4B1CD4F9D1003920E4 /* ZLPlayerView.h */,
+				44102F4C1CD4F9D1003920E4 /* ZLPlayerView.m */,
+			);
+			path = ZLPlayerDemo;
+			sourceTree = "<group>";
+		};
+		4444586D1CD2FE6A00612FED /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				4444586E1CD2FE6A00612FED /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		A6D54F3AF2CF807BAC86D96E /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				35BD51E47DAC30767896F870 /* Pods.debug.xcconfig */,
+				A567C2A141EDD97712B29964 /* Pods.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		C3414DCE21813AD9329ED712 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9F6D2CAEBDBA650B6A4CA5B8 /* libPods.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		444458691CD2FE6A00612FED /* ZLPlayerDemo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 444458811CD2FE6A00612FED /* Build configuration list for PBXNativeTarget "ZLPlayerDemo" */;
+			buildPhases = (
+				0700066C9263E42F044D462D /* Check Pods Manifest.lock */,
+				444458661CD2FE6A00612FED /* Sources */,
+				444458671CD2FE6A00612FED /* Frameworks */,
+				444458681CD2FE6A00612FED /* Resources */,
+				580808381DDD5396E98043D6 /* Embed Pods Frameworks */,
+				8832293E3EC65F69961CDB69 /* Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ZLPlayerDemo;
+			productName = ZLPlayerDemo;
+			productReference = 4444586A1CD2FE6A00612FED /* ZLPlayerDemo.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		444458621CD2FE6A00612FED /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0720;
+				ORGANIZATIONNAME = zhaolei;
+				TargetAttributes = {
+					444458691CD2FE6A00612FED = {
+						CreatedOnToolsVersion = 7.2;
+						DevelopmentTeam = 3XJ57A7TW6;
+					};
+				};
+			};
+			buildConfigurationList = 444458651CD2FE6A00612FED /* Build configuration list for PBXProject "ZLPlayerDemo" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 444458611CD2FE6A00612FED;
+			productRefGroup = 4444586B1CD2FE6A00612FED /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				444458691CD2FE6A00612FED /* ZLPlayerDemo */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		444458681CD2FE6A00612FED /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4444588B1CD3090000612FED /* libReveal.dylib in Resources */,
+				4444588C1CD3090000612FED /* Reveal.framework in Resources */,
+				4444587D1CD2FE6A00612FED /* LaunchScreen.storyboard in Resources */,
+				4444587A1CD2FE6A00612FED /* Assets.xcassets in Resources */,
+				444458781CD2FE6A00612FED /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0700066C9263E42F044D462D /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		580808381DDD5396E98043D6 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		8832293E3EC65F69961CDB69 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		444458661CD2FE6A00612FED /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				444458751CD2FE6A00612FED /* ViewController.m in Sources */,
+				444458721CD2FE6A00612FED /* AppDelegate.m in Sources */,
+				4444586F1CD2FE6A00612FED /* main.m in Sources */,
+				44102F4D1CD4F9D1003920E4 /* ZLPlayerView.m in Sources */,
+				444458861CD2FE8D00612FED /* ZLPlayerVC.m in Sources */,
+				44102F481CD4A48D003920E4 /* MyAVPlayerItem.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		444458761CD2FE6A00612FED /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				444458771CD2FE6A00612FED /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		4444587B1CD2FE6A00612FED /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4444587C1CD2FE6A00612FED /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		4444587F1CD2FE6A00612FED /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		444458801CD2FE6A00612FED /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		444458821CD2FE6A00612FED /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 35BD51E47DAC30767896F870 /* Pods.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				INFOPLIST_FILE = ZLPlayerDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-l\"Masonry\"",
+					"-framework",
+					"\"Foundation\"",
+					"-framework",
+					"\"UIKit\"",
+					"-ObjC",
+					"-lz",
+					"-framework",
+					Reveal,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ouying.zl.ZLPlayerDemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		444458831CD2FE6A00612FED /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A567C2A141EDD97712B29964 /* Pods.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				INFOPLIST_FILE = ZLPlayerDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+					"-l\"Masonry\"",
+					"-framework",
+					"\"Foundation\"",
+					"-framework",
+					"\"UIKit\"",
+					"-ObjC",
+					"-lz",
+					"-framework",
+					Reveal,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ouying.zl.ZLPlayerDemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		444458651CD2FE6A00612FED /* Build configuration list for PBXProject "ZLPlayerDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4444587F1CD2FE6A00612FED /* Debug */,
+				444458801CD2FE6A00612FED /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		444458811CD2FE6A00612FED /* Build configuration list for PBXNativeTarget "ZLPlayerDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				444458821CD2FE6A00612FED /* Debug */,
+				444458831CD2FE6A00612FED /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 444458621CD2FE6A00612FED /* Project object */;
+}
