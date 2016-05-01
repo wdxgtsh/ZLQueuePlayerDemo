@@ -27,7 +27,7 @@
 }
 
 
-- (void)setPlayer:(AVQueuePlayer *)queuePlayer{
+- (void)setQueuePlayer:(AVQueuePlayer *)queuePlayer{
     [(AVPlayerLayer *)[self layer] setPlayer:queuePlayer];
 }
 

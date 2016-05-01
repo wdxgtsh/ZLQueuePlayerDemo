@@ -10,6 +10,7 @@
 #import "Masonry.h"
 #import "Common.h"
 #import "MyAVPlayerItem.h"
+#import "ZLPlayerView.h"
 
 // 竖屏 bar的高度
 #define TopBarH_N 30
@@ -28,6 +29,9 @@
 #define ToolView_Show_Time 10
 
 #define ToolView_Hidden_duration 1
+
+// 当前时间与剩余时间的 lable的宽度
+#define TimeLabel_W 70
 
 
 
@@ -62,17 +66,18 @@
 
 @property (nonatomic, assign) UIDeviceOrientation currentOrientation;
 
-
-@property (nonatomic, strong) AVQueuePlayer * queuePlayer;
-
 @property (nonatomic, strong) AVPlayerItem * adPlayerItem;
 @property (nonatomic, strong) AVPlayerItem * normalPlayerItem;
 
 @property (nonatomic, strong) AVPlayerLayer * playLayer;
 
-@property (nonatomic, assign) NSInteger movieLength;
+@property (nonatomic, assign) NSInteger videoTotalTime;
 
 @property (nonatomic, strong) id timeObserver;
+
+@property (nonatomic, strong) ZLPlayerView * playerView;
+
+@property (nonatomic, weak) AVQueuePlayer * avQueuePlayer;
 
 @end
 
@@ -99,7 +104,6 @@
 - (void)addNoti{
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
 }
-
 
 #pragma mark |-- load View
 - (void)loadTopbar{
@@ -165,7 +169,6 @@
     });
     
 }
-
 - (void)loadBottomBar{
     self.bottomView = ({
         UIView * view = [[UIView alloc] init];
@@ -211,9 +214,11 @@
         [self.bottomView addSubview:label];
         [label setContentCompressionResistancePriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
         [label setContentHuggingPriority:UILayoutPriorityRequired forAxis:UILayoutConstraintAxisHorizontal];
+        label.textAlignment = NSTextAlignmentRight;
         [label mas_makeConstraints:^(MASConstraintMaker *make) {
             make.leading.equalTo(self.playBtn.mas_trailing);
             make.centerY.equalTo(self.bottomView.mas_centerY);
+            make.width.equalTo(@TimeLabel_W);
         }];
         label;
     });
@@ -229,6 +234,7 @@
         [label mas_makeConstraints:^(MASConstraintMaker *make) {
             make.trailing.equalTo(self.fullScreenBtn.mas_leading);
             make.centerY.equalTo(self.bottomView.mas_centerY);
+            make.width.equalTo(@TimeLabel_W);
         }];
         label;
     });
@@ -239,8 +245,8 @@
         progressView.progressTintColor = [UIColor whiteColor];
         [self.bottomView addSubview:progressView];
         [progressView mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.leading.equalTo(self.currentTimeLabel.mas_trailing);
-            make.trailing.equalTo(self.remainTimeLabel.mas_leading);
+            make.leading.equalTo(self.currentTimeLabel.mas_trailing).offset(5);
+            make.trailing.equalTo(self.remainTimeLabel.mas_leading).offset(-5);
             make.centerY.equalTo(self.bottomView.mas_centerY);
         }];
         progressView;
@@ -248,7 +254,7 @@
     
     self.videoSlider = ({
         UISlider * slider = [[UISlider alloc] init];
-        slider.enabled = YES;
+        slider.enabled = NO;
         [slider addObserver:self forKeyPath:@"value" options:NSKeyValueObservingOptionNew context:nil];
         
         UIGraphicsBeginImageContextWithOptions((CGSize){ 1, 1 }, NO, 0.0f);
@@ -295,9 +301,7 @@
                 self.view.frame = CGRectMake(0, 0, PHONE_WIDTH,PHONE_WIDTH * 9 / 16);
                 self.bottomView.frame = CGRectMake(0, PHONE_WIDTH * 9 / 16 - BottomBarH_N, PHONE_WIDTH, BottomBarH_N);
                 self.topView.frame = CGRectMake(0, 0, PHONE_WIDTH, TopBarH_N);
-                if (_playLayer) {
-                    _playLayer.frame = CGRectMake(0, 0, PHONE_WIDTH,PHONE_WIDTH * 9 / 16);
-                }
+                self.playerView.frame = self.view.bounds;
             } completion:^(BOOL finished) {
                 
             }];
@@ -314,9 +318,7 @@
                 self.view.frame = CGRectMake(0, 0, PHONE_WIDTH,PHONE_HEIGHT);
                 self.bottomView.frame = CGRectMake(0, PHONE_WIDTH - BottomBarH_H, PHONE_HEIGHT, BottomBarH_H);
                 self.topView.frame = CGRectMake(0, 0, PHONE_HEIGHT, TopBarH_H);
-                if (_playLayer) {
-                    _playLayer.frame = CGRectMake(0, -PHONE_WIDTH/2 + BottomBarH_N, PHONE_HEIGHT,PHONE_HEIGHT);
-                }
+                self.playerView.frame = self.view.bounds;
             } completion:^(BOOL finished) {
                 
             }];
@@ -333,10 +335,7 @@
                 
                 self.bottomView.frame = CGRectMake(0, PHONE_WIDTH - BottomBarH_H, PHONE_HEIGHT, BottomBarH_H);
                 self.topView.frame = CGRectMake(0, 0, PHONE_HEIGHT, TopBarH_H);
-                if (_playLayer) {
-                    _playLayer.frame = CGRectMake(0, 0, PHONE_WIDTH,PHONE_HEIGHT);
-                }
-
+                self.playerView.frame = self.view.bounds;
             } completion:^(BOOL finished) {
                 
             }];
@@ -346,9 +345,6 @@
             break;
     }
 
-    
-    NSLog(@"frame  ---->  %@   %@ ", NSStringFromCGRect(_playLayer.frame), NSStringFromCGRect(_playLayer.bounds));
-    
 }
 
 #pragma mark |---- touchBegin  touchMoved  touchEnd
@@ -370,6 +366,15 @@
 }
 
 - (void)scrubbingDidEnd{
+    double currentTime = floor(_videoTotalTime*_videoSlider.value);
+    CMTime dragedCMTime = CMTimeMake(currentTime, 1);
+    __weak typeof (self) _weakSelf = self;
+    [self.avQueuePlayer seekToTime:dragedCMTime completionHandler:
+     ^(BOOL finish){
+        [_weakSelf.avQueuePlayer play];
+     }];
+
+    
     NSLog(@"%s", __func__);
 }
 
@@ -421,37 +426,40 @@
     
      self.adPlayerItem = [[MyAVPlayerItem alloc] initWithURL:[NSURL URLWithString:@"http://mvideo.spriteapp.cn/video/2016/0228/56d2865c3865b_wpd.mp4"]];
      self.normalPlayerItem = [[MyAVPlayerItem alloc] initWithURL:[NSURL URLWithString:@"http://mvideo.spriteapp.cn/video/2016/0427/92710204-0c7f-11e6-be8e-d4ae5296039dcut_wpc.mp4"]];
+    [self.normalPlayerItem addObserver:self forKeyPath:@"loadedTimeRanges" options:NSKeyValueObservingOptionNew context:nil];
+    
+    self.avQueuePlayer = [AVQueuePlayer queuePlayerWithItems:@[self.adPlayerItem, self.normalPlayerItem]];
+    [self.avQueuePlayer addObserver:self forKeyPath:@"currentItem" options:NSKeyValueObservingOptionNew context:nil];
     
     
-    _queuePlayer = [[AVQueuePlayer alloc] initWithItems:@[self.adPlayerItem, self.normalPlayerItem]];
-    _queuePlayer.actionAtItemEnd = AVPlayerActionAtItemEndAdvance;
+    self.playerView = [[ZLPlayerView alloc] init];
+    self.playerView.queuePlayer = self.avQueuePlayer;
     
-    _playLayer = [AVPlayerLayer playerLayerWithPlayer:_queuePlayer];
-    _playLayer.videoGravity = AVLayerVideoGravityResizeAspect;
-    _playLayer.frame = self.view.bounds;
-
-//    _playLayer.anchorPoint = CGPointMake(0, 0);
-    [self.view.layer addSublayer:_playLayer];
     
+    
+    self.playerView.frame = self.view.bounds;
+    [self.view addSubview:self.playerView];
+    // topView bottomView 靠前
     [self.view bringSubviewToFront:self.topView];
     [self.view bringSubviewToFront:self.bottomView];
-    
-    [_queuePlayer addObserver:self forKeyPath:@"currentItem" options:NSKeyValueObservingOptionNew context:nil];
-    
 
     [self.adPlayerItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
+    
+    __weak typeof (self) _weakSelf = self;
     void (^observerBlock)(CMTime time) = ^(CMTime time){
-        NSString *timeString = [NSString stringWithFormat:@"%02.2f", (float)time.value / (float)time.timescale];
-        NSString * remainTime = [NSString stringWithFormat:@"%02.2f", (float) _movieLength - (float)time.value / (float)time.timescale];
+        if (_weakSelf.avQueuePlayer.currentItem == _weakSelf.adPlayerItem) {
+            return ;
+        }
         if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
-            self.currentTimeLabel.text = timeString;
-            self.remainTimeLabel.text = remainTime;
+            _weakSelf.currentTimeLabel.text = [_weakSelf formatSecondToTimeWithSecond:(NSInteger)((float)time.value / (float)time.timescale) ];
+            _weakSelf.remainTimeLabel.text = [NSString stringWithFormat:@"-%@", [_weakSelf formatSecondToTimeWithSecond:(NSInteger)((float) _weakSelf.videoTotalTime - (float)time.value / (float)time.timescale) ]];
+            _weakSelf.videoSlider.value = ((float)time.value / (float)time.timescale)/_weakSelf.videoTotalTime;
         } else {
-            NSLog(@"App is backgrounded. Time is: %@", timeString);
+//            NSLog(@"App is backgrounded. Time is: %@", timeString);
         }
     };
     
-    self.timeObserver = [_queuePlayer addPeriodicTimeObserverForInterval:CMTimeMake(10, 1000)
+    self.timeObserver = [self.playerView.queuePlayer addPeriodicTimeObserverForInterval:CMTimeMake(10, 1000)
                                                                    queue:dispatch_get_main_queue()
                                                               usingBlock:observerBlock];
     //监听视频播放结束
@@ -461,19 +469,16 @@
 - (void)playerItemDidReachEnd:(NSNotification *)notification{
     
     
-    MyAVPlayerItem * item = (MyAVPlayerItem *)_queuePlayer.currentItem;
-    NSLog(@"before ---->   %@", _queuePlayer.items);
+    MyAVPlayerItem * item = (MyAVPlayerItem *)self.avQueuePlayer.currentItem;
     
     if (item.type == 1){
-        [_queuePlayer advanceToNextItem];
+        [self.avQueuePlayer advanceToNextItem];
     }
     
     
     if (item == self.normalPlayerItem) {
-        [_queuePlayer seekToTime:kCMTimeZero];
+        [self.avQueuePlayer seekToTime:kCMTimeZero];
     }
-
-    NSLog(@"before ---->   %@", _queuePlayer.items);
 }
 
 #pragma mark |---- observeValueForKeyPath
@@ -483,24 +488,88 @@
         if (item.type == 1) {
             NSLog(@"-------------------片头");
         }else if(item == self.normalPlayerItem){
-            _movieLength = (item.asset.duration.value / item.asset.duration.timescale);
+            self.videoSlider.enabled = YES;
+            _videoTotalTime = (item.asset.duration.value / item.asset.duration.timescale);
         }
     }
     else if([keyPath isEqualToString:@"status"]){
         MyAVPlayerItem *playerItem = (MyAVPlayerItem*)object;
         if ([playerItem status] == AVPlayerStatusReadyToPlay) {
-            [_queuePlayer play];
-            if (_queuePlayer.currentItem == self.adPlayerItem) {
+            [self.playerView.queuePlayer play];
+            if (self.avQueuePlayer.currentItem == self.adPlayerItem) {
                 [self.adPlayerItem removeObserver:self forKeyPath:@"status"];
             }
         }
+    }else if ([keyPath isEqualToString:@"loadedTimeRanges"]){
+        float bufferTime = [self availableDuration];
+        //debugLog(@"缓冲进度%f",bufferTime);
+        float durationTime = CMTimeGetSeconds([self.normalPlayerItem duration]);
+        //debugLog(@"缓冲进度：%f , 百分比：%f",bufferTime,bufferTime/durationTime);
+        
+        [self.videoProgressView setProgress:bufferTime / durationTime animated:YES];
     }
 }
 
 - (void)playButtonClicked:(UIButton *)button{
-    if (_queuePlayer) {
-        [self createAVPlayerWithTitleItem:nil andNormalItem:nil];
+
+    [self.normalPlayerItem removeObserver:self forKeyPath:@"loadedTimeRanges"];
+    [self.avQueuePlayer removeObserver:self forKeyPath:@"currentItem"];
+    
+    [self createAVPlayerWithTitleItem:nil andNormalItem:nil];
+
+}
+
+#pragma mark |-- 计算缓冲进度
+// 计算缓冲进度
+- (float)availableDuration
+{
+    NSArray *loadedTimeRanges = [self.normalPlayerItem loadedTimeRanges];
+    
+    if ([loadedTimeRanges count] > 0)
+    {
+        CMTimeRange timeRange = [[loadedTimeRanges objectAtIndex:0] CMTimeRangeValue];
+        
+        float startSeconds = CMTimeGetSeconds(timeRange.start);
+        float durationSeconds = CMTimeGetSeconds(timeRange.duration);
+        
+        return (startSeconds + durationSeconds);
+    }
+    else
+    {
+        return 0.0f;
     }
 }
+
+
+- (NSString *)formatSecondToTimeWithSecond:(NSInteger)secondCount{
+    NSString * h = nil;
+    NSString * min = nil;
+    NSString * second = nil;
+    if (secondCount/3600 > 0) {
+        h = [NSString stringWithFormat:@"%02zd:", secondCount/3600];
+    }else{
+        h = @"00:";
+    }
+    
+    if (secondCount%3600/60 > 0) {
+        min = [NSString stringWithFormat:@"%02zd:", secondCount%3600/60];
+    }else{
+        min = @"00:";
+    }
+    
+    if (secondCount%60 >= 0) {
+        second = [NSString stringWithFormat:@"%02zd", secondCount%60];
+    }else{
+        second = @"00";
+    }
+    
+    NSString * resultTime = [NSString stringWithFormat:@"%@%@%@", h, min, second];
+    if(_videoTotalTime >=  60 * 60){// 超过一小时
+        return resultTime;
+    }else{
+        return [resultTime substringFromIndex:3];
+    }
+}
+
 
 @end

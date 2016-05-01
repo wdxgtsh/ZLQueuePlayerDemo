@@ -11,8 +11,11 @@
 
 @interface ZLPlayerView : UIView
 
-@property (nonatomic, strong) AVQueuePlayer * player;
+
+@property (nonatomic, strong) AVQueuePlayer * queuePlayer;
 
 @property (nonatomic, readonly) AVPlayerLayer * playerLayer;
+
+- (AVQueuePlayer *)queuePlayer;
 
 @end
