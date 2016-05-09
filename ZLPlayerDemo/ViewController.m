@@ -25,9 +25,10 @@
     self.playerVC = [[ZLPlayerVC alloc] initView];
     self.playerVC.view.frame = CGRectMake(0, 20, PHONE_WIDTH, PHONE_WIDTH * 9 / 16);
     [self.view addSubview:self.playerVC.view];
-    
     [self.playerVC createAVPlayerWithTitleItem:nil andNormalItem:nil];
 
+    
+    
 //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange) name:UIDeviceOrientationDidChangeNotification object:nil];
     
     // Do any additional setup after loading the view, typically from a nib.

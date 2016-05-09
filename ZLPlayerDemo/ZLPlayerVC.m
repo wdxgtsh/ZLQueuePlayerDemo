@@ -64,6 +64,9 @@
 @property (nonatomic, strong) UIButton * collectionBtn;
 @property (nonatomic, strong) UIButton * shareButton;
 
+//倒计时label
+@property (nonatomic, strong) UILabel * countDownLabel;
+
 @property (nonatomic, assign) UIDeviceOrientation currentOrientation;
 
 @property (nonatomic, strong) AVPlayerItem * adPlayerItem;
@@ -87,8 +90,9 @@
 - (instancetype)initView{
     self = [super init];
     if (self) {
-        [self loadBottomBar];
         [self loadTopbar];
+        [self loadBottomBar];
+        [self loadCountDownLabel];
         [self addNoti];
     }
     return self;
@@ -278,6 +282,19 @@
     
     
 }
+- (void)loadCountDownLabel{
+    self.countDownLabel = ({
+        UILabel * label = [[UILabel alloc] init];
+        label.backgroundColor = [UIColor clearColor];
+        label.textColor = [UIColor whiteColor];
+        [self.view addSubview:label];
+        [label mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(self.view.mas_top).offset(20);
+            make.trailing.equalTo(self.view.mas_trailing).offset(-20);
+        }];
+        label;
+    });
+}
 
 #pragma mark |-- deviceOrientationDidChange
 - (void)deviceOrientationDidChange:(NSNotification *)noti{
@@ -448,6 +465,9 @@
     __weak typeof (self) _weakSelf = self;
     void (^observerBlock)(CMTime time) = ^(CMTime time){
         if (_weakSelf.avQueuePlayer.currentItem == _weakSelf.adPlayerItem) {
+            
+            self.countDownLabel.text = [NSString stringWithFormat:@"%zds",  _weakSelf.videoTotalTime - (NSInteger)(time.value / time.timescale)];
+            
             return ;
         }
         if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
@@ -464,6 +484,9 @@
                                                               usingBlock:observerBlock];
     //监听视频播放结束
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd:) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
+    
+    
+    [self.view bringSubviewToFront:self.countDownLabel];
 }
 
 - (void)playerItemDidReachEnd:(NSNotification *)notification{
@@ -484,16 +507,15 @@
 #pragma mark |---- observeValueForKeyPath
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context{
     if ([keyPath isEqualToString:@"currentItem"]) {
-        MyAVPlayerItem *item = (MyAVPlayerItem*)((AVPlayer *)object).currentItem;
-        if (item.type == 1) {
-            NSLog(@"-------------------片头");
-        }else if(item == self.normalPlayerItem){
-            self.videoSlider.enabled = YES;
-            _videoTotalTime = (item.asset.duration.value / item.asset.duration.timescale);
-        }
-    }
-    else if([keyPath isEqualToString:@"status"]){
+
+    }else if([keyPath isEqualToString:@"status"]){
         MyAVPlayerItem *playerItem = (MyAVPlayerItem*)object;
+        if (playerItem == self.adPlayerItem) {
+            _videoTotalTime = (playerItem.asset.duration.value / playerItem.asset.duration.timescale);
+        }else if(playerItem == self.normalPlayerItem){
+            self.videoSlider.enabled = YES;
+            _videoTotalTime = (playerItem.asset.duration.value / playerItem.asset.duration.timescale);
+        }
         if ([playerItem status] == AVPlayerStatusReadyToPlay) {
             [self.playerView.queuePlayer play];
             if (self.avQueuePlayer.currentItem == self.adPlayerItem) {
@@ -502,10 +524,7 @@
         }
     }else if ([keyPath isEqualToString:@"loadedTimeRanges"]){
         float bufferTime = [self availableDuration];
-        //debugLog(@"缓冲进度%f",bufferTime);
         float durationTime = CMTimeGetSeconds([self.normalPlayerItem duration]);
-        //debugLog(@"缓冲进度：%f , 百分比：%f",bufferTime,bufferTime/durationTime);
-        
         [self.videoProgressView setProgress:bufferTime / durationTime animated:YES];
     }
 }
@@ -515,8 +534,9 @@
     [self.normalPlayerItem removeObserver:self forKeyPath:@"loadedTimeRanges"];
     [self.avQueuePlayer removeObserver:self forKeyPath:@"currentItem"];
     
-    [self createAVPlayerWithTitleItem:nil andNormalItem:nil];
-
+    if(self.avQueuePlayer.items.count == 0){
+        [self createAVPlayerWithTitleItem:nil andNormalItem:nil];
+    }
 }
 
 #pragma mark |-- 计算缓冲进度

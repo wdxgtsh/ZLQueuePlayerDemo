@@ -32,7 +32,9 @@
 }
 
 - (AVPlayerLayer *)playerLayer{
-    return (AVPlayerLayer *)self.layer;
+    AVPlayerLayer * playerLayer = (AVPlayerLayer *)self.layer;
+    playerLayer.videoGravity = AVLayerVideoGravityResizeAspect;
+    return playerLayer;
 }
 
 @end
