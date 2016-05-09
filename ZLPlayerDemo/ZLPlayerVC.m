@@ -366,6 +366,7 @@
 
 #pragma mark |---- touchBegin  touchMoved  touchEnd
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
+    if(self.avQueuePlayer.currentItem == self.adPlayerItem) return;
     if (self.bottomView.hidden) {
         [self showTopAndBottomView];
     }else{
@@ -390,9 +391,6 @@
      ^(BOOL finish){
         [_weakSelf.avQueuePlayer play];
      }];
-
-    
-    NSLog(@"%s", __func__);
 }
 
 - (void)hiddenTopAndBottomView{
@@ -446,13 +444,11 @@
     [self.normalPlayerItem addObserver:self forKeyPath:@"loadedTimeRanges" options:NSKeyValueObservingOptionNew context:nil];
     
     self.avQueuePlayer = [AVQueuePlayer queuePlayerWithItems:@[self.adPlayerItem, self.normalPlayerItem]];
-    [self.avQueuePlayer addObserver:self forKeyPath:@"currentItem" options:NSKeyValueObservingOptionNew context:nil];
     
+    [self.avQueuePlayer addObserver:self forKeyPath:@"currentItem" options:NSKeyValueObservingOptionNew context:nil];
     
     self.playerView = [[ZLPlayerView alloc] init];
     self.playerView.queuePlayer = self.avQueuePlayer;
-    
-    
     
     self.playerView.frame = self.view.bounds;
     [self.view addSubview:self.playerView];
@@ -485,20 +481,15 @@
     //监听视频播放结束
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd:) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
     
-    
     [self.view bringSubviewToFront:self.countDownLabel];
 }
 
+
 - (void)playerItemDidReachEnd:(NSNotification *)notification{
-    
-    
     MyAVPlayerItem * item = (MyAVPlayerItem *)self.avQueuePlayer.currentItem;
-    
     if (item.type == 1){
         [self.avQueuePlayer advanceToNextItem];
     }
-    
-    
     if (item == self.normalPlayerItem) {
         [self.avQueuePlayer seekToTime:kCMTimeZero];
     }
