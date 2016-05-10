@@ -82,6 +82,15 @@
 
 @property (nonatomic, weak) AVQueuePlayer * avQueuePlayer;
 
+//是否是ad
+@property (nonatomic, assign) BOOL isNormalVideoPlayer;
+
+//锁定
+@property (nonatomic, strong) UIControl * lockButton;
+
+//是否锁定
+@property (nonatomic, assign) BOOL isOriationLocked;
+
 @end
 
 @implementation ZLPlayerVC
@@ -94,6 +103,7 @@
         [self loadBottomBar];
         [self loadCountDownLabel];
         [self addNoti];
+        [self loadLockButton];
     }
     return self;
 }
@@ -117,6 +127,7 @@
         view.hidden = YES;
         [self.view addSubview:view];
         view.userInteractionEnabled = YES;
+        view.hidden = YES;
         view.frame = CGRectMake(0, 0, PHONE_WIDTH, TopBarH_N);
         view;
     });
@@ -178,6 +189,7 @@
         UIView * view = [[UIView alloc] init];
         view.backgroundColor = [UIColor purpleColor];
         [self.view addSubview:view];
+        view.hidden = YES;
         view.frame = CGRectMake(0, PHONE_WIDTH * 9 / 16 - BottomBarH_N, PHONE_WIDTH, BottomBarH_N);
         view.userInteractionEnabled = YES;
         view;
@@ -295,6 +307,27 @@
         label;
     });
 }
+- (void)loadLockButton{
+    self.lockButton = ({
+        UIButton * button = [UIButton buttonWithType:UIButtonTypeCustom];
+        _lockButton.backgroundColor = [UIColor colorWithRed:0.f green:0.f blue:0.f alpha:0.4f];
+        [button setImage:[UIImage imageNamed:@"lock_open"] forState:UIControlStateNormal];
+        [button setImage:[UIImage imageNamed:@"lock_close"] forState:UIControlStateSelected];
+        [button addTarget:self action:@selector(lockButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+        button.layer.cornerRadius = 44/2;
+        button.layer.masksToBounds = YES;
+        button.hidden = YES;
+        button.backgroundColor = [UIColor redColor];
+        [self.view addSubview:button];
+        [button mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.leading.equalTo(self.view.mas_leading).offset(30);
+            make.width.height.equalTo(@44);
+            make.centerY.equalTo(self.view.mas_centerY);
+        }];
+        button;
+    });
+    [self.view bringSubviewToFront:self.lockButton];
+}
 
 #pragma mark |-- deviceOrientationDidChange
 - (void)deviceOrientationDidChange:(NSNotification *)noti{
@@ -303,13 +336,15 @@
 }
 
 - (void)roationViewWithOrientation:(UIDeviceOrientation)orientation{
-    if (orientation == _currentOrientation) {
+    if (orientation == _currentOrientation || _isOriationLocked) {
         return;
     }
     _currentOrientation = orientation;
     
     switch (orientation) {
         case UIDeviceOrientationPortrait:{
+            //隐藏锁定按钮
+            self.lockButton.hidden = YES;
             //显示 bottomView
             [self showTopAndBottomView];
             [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationFade];
@@ -326,7 +361,7 @@
             
             break;
         case UIDeviceOrientationLandscapeLeft:{
-            
+            self.lockButton.hidden = NO;
             [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
             //显示 bottomView  和  topView
             [self showTopAndBottomView];
@@ -343,6 +378,7 @@
             break;
             
         case UIDeviceOrientationLandscapeRight:{
+            self.lockButton.hidden = NO;
             [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationFade];
             //显示 bottomView  和  topView
             [self showTopAndBottomView];
@@ -394,12 +430,14 @@
 }
 
 - (void)hiddenTopAndBottomView{
-//    [UIView animateWithDuration:ToolView_Hidden_duration animations:^{
-//        self.topView.hidden = self.bottomView.hidden = YES;
-//    }];
+    [UIView animateWithDuration:ToolView_Hidden_duration animations:^{
+        self.topView.hidden = self.bottomView.hidden = YES;
+    }];
 }
 
 - (void)showTopAndBottomView{
+    //如果不是正片  直接返回
+    if(!_isNormalVideoPlayer) return;
 //    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(setHidden:) object:[NSNumber numberWithBool:YES]];//可以取消成功。
     [[self class] cancelPreviousPerformRequestsWithTarget:self];
     [UIView animateWithDuration:ToolView_Hidden_duration animations:^{
@@ -439,7 +477,7 @@
 //    item2.type = 2;
     
     
-     self.adPlayerItem = [[MyAVPlayerItem alloc] initWithURL:[NSURL URLWithString:@"http://mvideo.spriteapp.cn/video/2016/0228/56d2865c3865b_wpd.mp4"]];
+     self.adPlayerItem = [[MyAVPlayerItem alloc] initWithURL:[NSURL URLWithString:@"http://mvvideo1.meitudata.com/571b6d81b9e3c5236.mp4"]];
      self.normalPlayerItem = [[MyAVPlayerItem alloc] initWithURL:[NSURL URLWithString:@"http://mvideo.spriteapp.cn/video/2016/0427/92710204-0c7f-11e6-be8e-d4ae5296039dcut_wpc.mp4"]];
     [self.normalPlayerItem addObserver:self forKeyPath:@"loadedTimeRanges" options:NSKeyValueObservingOptionNew context:nil];
     
@@ -455,6 +493,7 @@
     // topView bottomView 靠前
     [self.view bringSubviewToFront:self.topView];
     [self.view bringSubviewToFront:self.bottomView];
+    
 
     [self.adPlayerItem addObserver:self forKeyPath:@"status" options:NSKeyValueObservingOptionNew context:nil];
     
@@ -482,17 +521,26 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(playerItemDidReachEnd:) name:AVPlayerItemDidPlayToEndTimeNotification object:nil];
     
     [self.view bringSubviewToFront:self.countDownLabel];
+    [self.view bringSubviewToFront:self.lockButton];
 }
 
 
 - (void)playerItemDidReachEnd:(NSNotification *)notification{
     MyAVPlayerItem * item = (MyAVPlayerItem *)self.avQueuePlayer.currentItem;
-    if (item.type == 1){
-        [self.avQueuePlayer advanceToNextItem];
+    if (item == self.adPlayerItem) {
+        self.countDownLabel.hidden = YES;
+        self.isNormalVideoPlayer = YES;
+        [self showTopAndBottomView];
+    }else{
+        self.isNormalVideoPlayer = NO;
+        self.countDownLabel.text = @"";
+
     }
-    if (item == self.normalPlayerItem) {
-        [self.avQueuePlayer seekToTime:kCMTimeZero];
-    }
+}
+
+- (void)play{
+    [self.playerView.queuePlayer play];
+    self.playBtn.selected = YES;
 }
 
 #pragma mark |---- observeValueForKeyPath
@@ -508,7 +556,7 @@
             _videoTotalTime = (playerItem.asset.duration.value / playerItem.asset.duration.timescale);
         }
         if ([playerItem status] == AVPlayerStatusReadyToPlay) {
-            [self.playerView.queuePlayer play];
+            [self play];
             if (self.avQueuePlayer.currentItem == self.adPlayerItem) {
                 [self.adPlayerItem removeObserver:self forKeyPath:@"status"];
             }
@@ -520,13 +568,28 @@
     }
 }
 
+
+#pragma mark |--- 播放按钮的点击事件
 - (void)playButtonClicked:(UIButton *)button{
 
     [self.normalPlayerItem removeObserver:self forKeyPath:@"loadedTimeRanges"];
     [self.avQueuePlayer removeObserver:self forKeyPath:@"currentItem"];
+    [self.avQueuePlayer removeAllItems];
     
+    //隐藏顶部底部工具栏
+    [self hiddenTopAndBottomView];
     if(self.avQueuePlayer.items.count == 0){
         [self createAVPlayerWithTitleItem:nil andNormalItem:nil];
+    }
+}
+
+#pragma mark |--- 锁定按钮的点击事件
+- (void)lockButtonClicked:(UIButton *)button{
+    self.lockButton.selected = !self.lockButton.selected;
+    if (self.lockButton.selected) {
+        _isOriationLocked = YES;
+    }else{
+        _isOriationLocked = NO;
     }
 }
 
